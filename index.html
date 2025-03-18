@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Roles Management</title>
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
+    rel="stylesheet"
+  />
+  <script 
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" 
+    defer
+  ></script>
+</head>
+<body class="bg-light">
+  <div class="container py-4">
+    <h1>Roles List</h1>
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#roleModal">Add New Role</button>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Role Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Admin</td>
+          <td><button class="btn btn-sm btn-secondary">Edit</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal for Create Role -->
+  <div class="modal fade" id="roleModal" tabindex="-1" aria-labelledby="roleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create Role</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <!-- Nombre del role -->
+          <div class="mb-3">
+            <label for="roleName" class="form-label">Role Name</label>
+            <input type="text" id="roleName" class="form-control" />
+          </div>
+
+          <!-- Accordion principal -->
+          <div class="accordion" id="permissionsAccordion">
+
+            <!-- Core Transaction Functions (IDÉNTICO al adjunto) -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingCoreFunctions">
+                <button
+                  class="accordion-button"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseCoreFunctions"
+                  aria-expanded="true"
+                  aria-controls="collapseCoreFunctions"
+                >
+                  Core Transaction Functions
+                </button>
+              </h2>
+              <div
+                id="collapseCoreFunctions"
+                class="accordion-collapse collapse show"
+                aria-labelledby="headingCoreFunctions"
+              >
+                <div class="accordion-body">
+                  <!-- Purchase Item -->
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="purchaseItem" />
+                    <label class="form-check-label" for="purchaseItem">Purchase Item</label>
+                  </div>
+
+                  <!-- Void as a Switch -->
+                  <div class="form-check form-switch mt-3">
+                    <input class="form-check-input" type="checkbox" id="voidSwitch" />
+                    <label class="form-check-label" for="voidSwitch">Void</label>
+                  </div>
+                  <div id="voidOptions" style="display: none;">
+                    <div class="form-check mt-2">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="transactionType"
+                        id="allTransactions"
+                        checked
+                      />
+                      <label class="form-check-label" for="allTransactions">All Transactions</label>
+                    </div>
+                    <div class="form-check mt-2">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="transactionType"
+                        id="lastTransaction"
+                      />
+                      <label class="form-check-label" for="lastTransaction">Last Transaction</label>
+                    </div>
+                    <div class="form-check mt-2">
+                      <input class="form-check-input" type="checkbox" id="codeRequired" />
+                      <label class="form-check-label" for="codeRequired">Code Required</label>
+                    </div>
+                  </div>
+
+                  <!-- Grant Access Switch -->
+                  <div class="form-check form-switch mt-3">
+                    <input class="form-check-input" type="checkbox" id="ticketValidation" />
+                    <label class="form-check-label" for="ticketValidation"
+                      >Grant access to this profile for validating selected tickets</label
+                    >
+                  </div>
+                  <div id="ticketValidationOptions" style="display: none;">
+                    <!-- Botón para abrir el modal de tickets -->
+                    <button
+                      class="btn btn-primary mt-2"
+                      id="openTicketModal"
+                      data-bs-toggle="modal"
+                      data-bs-target="#ticketModal"
+                    >
+                      Select Tickets
+                    </button>
+
+                    <!-- Listado de tickets seleccionados -->
+                    <ul class="list-group mt-2" id="selectedTicketsList"></ul>
+                  </div>
+
+                  <!-- Voucher Properties Switch -->
+                  <div class="form-check form-switch mt-3">
+                    <input class="form-check-input" type="checkbox" id="voucherSwitch" />
+                    <label class="form-check-label" for="voucherSwitch"
+                      >Activate Voucher properties in this terminal profile</label
+                    >
+                  </div>
+                  <div id="voucherOptions" style="display: none;">
+                    <div class="form-check mt-2">
+                      <input class="form-check-input" type="checkbox" id="issueVoucher" />
+                      <label class="form-check-label" for="issueVoucher">Issue Voucher</label>
+                      <div id="acceptPayments" style="display: none;">
+                        <div class="form-check mt-2">
+                          <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="acceptPaymentAtIssuance"
+                          />
+                          <label class="form-check-label" for="acceptPaymentAtIssuance"
+                            >Accept Full Payment at Issuance</label
+                          >
+                        </div>
+                        <div class="form-check mt-2">
+                          <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="acceptPaymentAtRedemption"
+                          />
+                          <label class="form-check-label" for="acceptPaymentAtRedemption"
+                            >Accept Full Payment at Redemption</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-check mt-2">
+                      <input class="form-check-input" type="checkbox" id="redemVoucher" />
+                      <label class="form-check-label" for="redemVoucher">Redem Voucher</label>
+                    </div>
+                    <div class="form-check mt-2">
+                      <input class="form-check-input" type="checkbox" id="printTickets" />
+                      <label class="form-check-label" for="printTickets">Print Tickets</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Payment Options (IDÉNTICO, salvo que se ocultan campos Name y Required comment) -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingPaymentOptions">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapsePaymentOptions"
+                  aria-expanded="false"
+                  aria-controls="collapsePaymentOptions"
+                >
+                  Payment Options
+                </button>
+              </h2>
+              <div
+                id="collapsePaymentOptions"
+                class="accordion-collapse collapse"
+                aria-labelledby="headingPaymentOptions"
+              >
+                <div class="accordion-body">
+                  <p><strong>Payment methods enabled on this Terminal Profile</strong></p>
+                  <!-- Las primeras 3 opciones en columnas -->
+                  <div class="row mb-3">
+                    <div class="col">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="cashPayment" />
+                        <label class="form-check-label" for="cashPayment">Cash</label>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="creditCardPayment" />
+                        <label class="form-check-label" for="creditCardPayment">Credit card</label>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="bonoPayment" />
+                        <label class="form-check-label" for="bonoPayment">Bono</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <hr />
+
+                  <!-- Sección "Custom method" -->
+                  <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="customPayment" />
+                    <label class="form-check-label" for="customPayment">Custom method</label>
+                  </div>
+
+                  <!-- Se elimina la parte de 'Name' y 'Required Comment' -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Merchant Receipt Printing Options (IDÉNTICO AL ADJUNTO) -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingMerchantReceipt">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseMerchantReceipt"
+                  aria-expanded="false"
+                  aria-controls="collapseMerchantReceipt"
+                >
+                  Merchant Receipt Printing Options
+                </button>
+              </h2>
+              <div
+                id="collapseMerchantReceipt"
+                class="accordion-collapse collapse"
+                aria-labelledby="headingMerchantReceipt"
+              >
+                <div class="accordion-body">
+                  <!-- Always Print -->
+                  <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="merchantAlwaysPrint" />
+                    <label class="form-check-label" for="merchantAlwaysPrint">Always Print</label>
+                  </div>
+                  <div class="row">
+                    <div class="col-6">
+                      <!-- Transacciones habilitadas -->
+                      <div class="mb-3">
+                        <p class="fw-bold">Enabled on Transactions:</p>
+                        <div class="form-check">
+                          <input class="form-check-input merchant-transaction" type="checkbox" id="merchantPurchase" />
+                          <label class="form-check-label" for="merchantPurchase">Purchase</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input merchant-transaction" type="checkbox" id="merchantRefund" />
+                          <label class="form-check-label" for="merchantRefund">Refund</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input merchant-transaction" type="checkbox" id="merchantVoid" />
+                          <label class="form-check-label" for="merchantVoid">Void</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input merchant-transaction" type="checkbox" id="merchantIssueVoucher" />
+                          <label class="form-check-label" for="merchantIssueVoucher">Issue Voucher</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input merchant-transaction" type="checkbox" id="merchantRedeemVoucher" />
+                          <label class="form-check-label" for="merchantRedeemVoucher">Redeem Voucher</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input merchant-transaction" type="checkbox" id="merchantValidateTickets" />
+                          <label class="form-check-label" for="merchantValidateTickets">Validate Tickets</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <!-- Métodos de pago habilitados -->
+                      <div class="mb-3">
+                        <p class="fw-bold">Enabled on Payment Methods:</p>
+                        <div class="form-check">
+                          <input class="form-check-input merchant-payment" type="checkbox" id="merchantCash" />
+                          <label class="form-check-label" for="merchantCash">Cash</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input merchant-payment" type="checkbox" id="merchantBono" />
+                          <label class="form-check-label" for="merchantBono">Bono</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input merchant-payment" type="checkbox" id="merchantCredit" />
+                          <label class="form-check-label" for="merchantCredit">Credit</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input merchant-payment" type="checkbox" id="merchantCustomMethod" />
+                          <label class="form-check-label" for="merchantCustomMethod">Custom method</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Opciones de recibo -->
+                  <div class="mb-3">
+                    <p class="fw-bold">Receipt Options:</p>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="merchantItemized" />
+                      <label class="form-check-label" for="merchantItemized">Itemized</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="merchantLogo" />
+                      <label class="form-check-label" for="merchantLogo">Logo</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="merchantSignatureCapture" />
+                      <label class="form-check-label" for="merchantSignatureCapture">Signature Capture</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="merchantReprint" />
+                      <label class="form-check-label" for="merchantReprint">Reprint</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Administration -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingAdministration">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseAdministration"
+                  aria-expanded="false"
+                  aria-controls="collapseAdministration"
+                >
+                  Administration
+                </button>
+              </h2>
+              <div
+                id="collapseAdministration"
+                class="accordion-collapse collapse"
+                aria-labelledby="headingAdministration"
+              >
+                <div class="accordion-body row">
+                  <template id="admin-template">
+                    <div class="col-md-4">
+                      <h6 class="module-name"></h6>
+                      <div class="form-check"><input class="form-check-input" type="checkbox" /> Create</div>
+                      <div class="form-check"><input class="form-check-input" type="checkbox" /> View</div>
+                      <div class="form-check"><input class="form-check-input" type="checkbox" /> Edit</div>
+                      <div class="form-check"><input class="form-check-input" type="checkbox" /> Delete</div>
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="button" class="btn btn-primary">Save Role</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para seleccionar tickets -->
+  <div
+    class="modal fade"
+    id="ticketModal"
+    tabindex="-1"
+    aria-labelledby="ticketModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ticketModalLabel">Select Tickets</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>Select the tickets you want to enable for validation:</p>
+
+          <div class="form-check my-2">
+            <input class="form-check-input" type="checkbox" id="selectAllTickets" />
+            <label class="form-check-label fw-bold" for="selectAllTickets">Select all tickets</label>
+          </div>
+          <!-- Listado de 6 tickets con checkboxes -->
+          <div id="validateTickets">
+            <div class="form-check mb-1">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="ticketItem"
+                value="Ticket A"
+                id="ticketA"
+              />
+              <label class="form-check-label" for="ticketA">Ticket A</label>
+            </div>
+            <div class="form-check mb-1">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="ticketItem"
+                value="Ticket B"
+                id="ticketB"
+              />
+              <label class="form-check-label" for="ticketB">Ticket B</label>
+            </div>
+            <div class="form-check mb-1">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="ticketItem"
+                value="Ticket C"
+                id="ticketC"
+              />
+              <label class="form-check-label" for="ticketC">Ticket C</label>
+            </div>
+            <div class="form-check mb-1">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="ticketItem"
+                value="Ticket D"
+                id="ticketD"
+              />
+              <label class="form-check-label" for="ticketD">Ticket D</label>
+            </div>
+            <div class="form-check mb-1">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="ticketItem"
+                value="Ticket E"
+                id="ticketE"
+              />
+              <label class="form-check-label" for="ticketE">Ticket E</label>
+            </div>
+            <div class="form-check mb-1">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="ticketItem"
+                value="Ticket F"
+                id="ticketF"
+              />
+              <label class="form-check-label" for="ticketF">Ticket F</label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            id="updateTicketsBtn"
+          >
+            Update
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    // Mostrar / Ocultar opciones en "Void"
+    const voidSwitch = document.getElementById('voidSwitch');
+    const voidOptions = document.getElementById('voidOptions');
+
+    voidSwitch.addEventListener('change', function() {
+      voidOptions.style.display = this.checked ? 'block' : 'none';
+    });
+
+    // Mostrar / Ocultar opciones en "Grant access to this profile for validating selected tickets"
+    const ticketValidation = document.getElementById('ticketValidation');
+    const ticketValidationOptions = document.getElementById('ticketValidationOptions');
+
+    ticketValidation.addEventListener('change', function() {
+      ticketValidationOptions.style.display = this.checked ? 'block' : 'none';
+    });
+
+    // Modal de tickets
+    const updateTicketsBtn = document.getElementById('updateTicketsBtn');
+    const selectedTicketsList = document.getElementById('selectedTicketsList');
+
+    updateTicketsBtn.addEventListener('click', function() {
+      const ticketCheckboxes = document.querySelectorAll('input[name="ticketItem"]:checked');
+      selectedTicketsList.innerHTML = '';
+
+      ticketCheckboxes.forEach((cb) => {
+        const li = document.createElement('li');
+        li.classList.add('list-group-item');
+        li.textContent = cb.value;
+        selectedTicketsList.appendChild(li);
+      });
+      // Cerrar modal
+      const ticketModal = document.getElementById('ticketModal');
+      const modalInstance = bootstrap.Modal.getInstance(ticketModal);
+      modalInstance.hide();
+    });
+
+    // Checkbox maestro para tickets
+    const selectAllTickets = document.getElementById('selectAllTickets');
+    const ticketOptions = document.querySelectorAll('#validateTickets .form-check-input');
+
+    selectAllTickets.addEventListener('change', () => {
+      ticketOptions.forEach((checkbox) => {
+        checkbox.checked = selectAllTickets.checked;
+      });
+    });
+
+    ticketOptions.forEach((checkbox) => {
+      checkbox.addEventListener('change', () => {
+        const allChecked = [...ticketOptions].every((box) => box.checked);
+        selectAllTickets.checked = allChecked;
+      });
+    });
+
+    // Voucher Switch
+    const voucherSwitch = document.getElementById('voucherSwitch');
+    const voucherOptions = document.getElementById('voucherOptions');
+
+    voucherSwitch.addEventListener('change', function() {
+      voucherOptions.style.display = this.checked ? 'block' : 'none';
+    });
+
+    // IssueVoucher => Accept Payments
+    const issueVoucher = document.getElementById('issueVoucher');
+    const acceptPayments = document.getElementById('acceptPayments');
+
+    issueVoucher.addEventListener('change', function() {
+      acceptPayments.style.display = this.checked ? 'block' : 'none';
+    });
+
+    // Manejo del Merchant Always Print => marca todos los merchant-transaction y merchant-payment
+    const merchantAlwaysPrint = document.getElementById('merchantAlwaysPrint');
+    const merchantTransactionCheckboxes = document.querySelectorAll('.merchant-transaction');
+    const merchantPaymentCheckboxes = document.querySelectorAll('.merchant-payment');
+
+    merchantAlwaysPrint.addEventListener('change', () => {
+      const all = [...merchantTransactionCheckboxes, ...merchantPaymentCheckboxes];
+      all.forEach((checkbox) => {
+        checkbox.checked = merchantAlwaysPrint.checked;
+      });
+    });
+
+    // Si todos están marcados, se activa alwaysPrint; si alguno se desmarca, se desactiva
+    function updateMerchantAlwaysPrint() {
+      const all = [...merchantTransactionCheckboxes, ...merchantPaymentCheckboxes];
+      merchantAlwaysPrint.checked = all.every((cb) => cb.checked);
+    }
+
+    merchantTransactionCheckboxes.forEach((cb) => {
+      cb.addEventListener('change', updateMerchantAlwaysPrint);
+    });
+
+    merchantPaymentCheckboxes.forEach((cb) => {
+      cb.addEventListener('change', updateMerchantAlwaysPrint);
+    });
+
+    // Administration modules
+    const adminModules = [
+      'Tickets',
+      'Devices',
+      'Terminal Profiles',
+      'User Roles',
+      'Users',
+      'Transactions'
+    ];
+    const adminContainer = document.querySelector('#collapseAdministration .accordion-body');
+    const template = document.getElementById('admin-template');
+
+    adminModules.forEach((module) => {
+      const clone = template.content.cloneNode(true);
+      clone.querySelector('.module-name').textContent = module;
+      adminContainer.appendChild(clone);
+    });
+  </script>
+</body>
+</html>
