@@ -115,16 +115,16 @@
                   </div>
 
                   <!-- Grant Access Switch -->
-                  <div class="form-check form-switch mt-3">
+                  <div class="form-check mt-3">
                     <input class="form-check-input" type="checkbox" id="ticketValidation" />
                     <label class="form-check-label" for="ticketValidation"
                       >Grant access to this profile for validating selected tickets</label
                     >
                   </div>
-                  <div id="ticketValidationOptions" style="display: none;">
+                  <div id="ticketValidationOptions_" style="display: none;">
                     <!-- Botón para abrir el modal de tickets -->
                     <button
-                      class="btn btn-primary mt-2 d-none"
+                      class="btn btn-primary mt-2"
                       id="openTicketModal"
                       data-bs-toggle="modal"
                       data-bs-target="#ticketModal"
@@ -364,7 +364,7 @@
               >
                 <div class="accordion-body row">
                   <template id="admin-template">
-                    <div class="col-md-4">
+                    <div class="col-md-4 mb-3">
                       <h6 class="module-name"></h6>
                       <div class="form-check"><input class="form-check-input" type="checkbox" /> Create</div>
                       <div class="form-check"><input class="form-check-input" type="checkbox" /> View</div>
@@ -606,6 +606,7 @@
       'Terminal Profiles',
       'User Roles',
       'Users',
+      'Reports',
       'Transactions'
     ];
     const adminContainer = document.querySelector('#collapseAdministration .accordion-body');
@@ -614,6 +615,14 @@
     adminModules.forEach((module) => {
       const clone = template.content.cloneNode(true);
       clone.querySelector('.module-name').textContent = module;
+
+      // Ocultar el Delete para Transactions
+      if (module === 'Transactions') {
+        const checks = clone.querySelectorAll('.form-check');
+        // El cuarto form-check es el de Delete
+        checks[3].classList.add('d-none');
+      }
+
       adminContainer.appendChild(clone);
     });
   </script>
